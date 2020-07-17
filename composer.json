@@ -1,0 +1,23 @@
+{
+    "name": "magebit/aheadworks-blog-indexer",
+    "description": "Aheadworks Blog indexer for VSBridge / Vue Storefront",
+    "type": "magento2-component",
+    "require": {
+        "magebit/vsbridge-static-content-procesor": "^1.0"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Emils Malovka",
+            "email": "emils.malovka@magebit.com"
+        }
+    ],
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Magebit\\BlogIndexer\\": ""
+        }
+    },
+}

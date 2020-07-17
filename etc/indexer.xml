@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Magebit_BlogIndexer
+ *
+ * @category  Magebit
+ * @package   Magebit_BlogIndexer
+ * @author    Emils Malovka <emils.malovka@magebit.com>
+ * @copyright 2020 [Magebit, Ltd.(http://www.magebit.com/)]
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Indexer/etc/indexer.xsd">
+    <indexer id="vsbridge_cms_blog_indexer" view_id="vsbridge_cms_blog_indexer" class="Magebit\BlogIndexer\Model\Indexer\CmsBlog">
+        <title translate="true">Vsbridge Cms Blog Indexer</title>
+        <description translate="true">Update Cms Blog in Elastic</description>
+    </indexer>
+    <indexer id="vsbridge_cms_blog_category_indexer" view_id="vsbridge_cms_blog_category_indexer" class="Magebit\BlogIndexer\Model\Indexer\CmsBlogCategory">
+        <title translate="true">Vsbridge Cms Blog Category Indexer</title>
+        <description translate="true">Update Cms Blog Category in Elastic</description>
+    </indexer>
+</config>
