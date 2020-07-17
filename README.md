@@ -15,7 +15,7 @@ This repository is a Magento 2 dependency for [Aheadworks Blog module for VSF](h
     which you can install with composer `composer require magebit/vsbridge-static-content-procesor` or going to the repository and following manual installation steps there
 
 ### URL rewrites
-By default, all indexed content and images will be with magento store urls. If you want to run images through VSF-API, you'll have to configure `Stores - Configuration - VueStorefront - Indexer - Static Content Processor` and check the "Enable URL Rewrites for aheadworks blog" option.
+By default, all indexed content and images will be with magento store urls. If you want to convert links and run images through VSF-API, you'll have to configure `Stores - Configuration - VueStorefront - Indexer - Static Content Processor` and check the "Enable URL Rewrites for aheadworks blog" option.
 
 ---
 
