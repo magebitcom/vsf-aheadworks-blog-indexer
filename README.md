@@ -26,9 +26,7 @@ By default, all indexed content and images will be with magento store urls. If y
 
 ![Magebit](https://magebit.com/img/magebit-logo-2x.png)
 
+*Have questions or need help? Contact us at info@magebit.com*
 
-## Authors
-
-* **Emīls Malovka** (emils.malovka@magebit.com)
 
 
