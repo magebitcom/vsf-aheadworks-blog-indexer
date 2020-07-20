@@ -35,26 +35,19 @@ class CmsBlog
      * @var MetadataPool
      */
     private $metaDataPool;
-    /**
-     * @var PostInterface
-     */
-    private $postInterface;
 
     /**
      * Rates constructor.
      *
      * @param MetadataPool $metadataPool
      * @param ResourceConnection $resourceConnection
-     * @param PostInterface $postInterface
      */
     public function __construct(
         MetadataPool $metadataPool,
-        ResourceConnection $resourceConnection,
-        PostInterface $postInterface
+        ResourceConnection $resourceConnection
     ) {
         $this->resource = $resourceConnection;
         $this->metaDataPool = $metadataPool;
-        $this->postInterface = $postInterface;
     }
 
     /**
@@ -69,7 +62,6 @@ class CmsBlog
     public function loadBlogs($storeId = 1, array $blogIds = [], $fromId = 0, $limit = 1000)
     {
         $metaData = $this->getCmsBlogMetadata();
-        $linkFieldId = $metaData->getLinkField();
 
         $select = $this->getConnection()->select()->from(['cms_blog' => $metaData->getEntityTable()]);
 
