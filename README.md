@@ -1,3 +1,8 @@
+<p align="left">
+    <a href="https://github.com/magebitcom/vsf-aheadworks-blog-indexer"><img src="https://img.shields.io/github/v/tag/magebitcom/vsf-aheadworks-blog-indexer" /></a>
+    <a href="https://packagist.org/packages/magebit/aheadworks-blog-indexer"><img src="https://img.shields.io/packagist/v/magebit/aheadworks-blog-indexer" /></a>
+</p>
+
 # Aheadworks Blog indexer for Vue Storefront
 This repository is a Magento 2 dependency for [Aheadworks Blog module for VSF](https://github.com/magebitcom/vsf-aheadworks-blog)
 
