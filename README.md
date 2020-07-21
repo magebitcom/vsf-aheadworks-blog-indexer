@@ -7,7 +7,7 @@
 This repository is a Magento 2 dependency for [Aheadworks Blog module for VSF](https://github.com/magebitcom/vsf-aheadworks-blog)
 
 ## Requirements
-- [Aheadworks Blog](https://ecommerce.aheadworks.com/magento-2-extensions/blog)
+- [Aheadworks Blog](https://ecommerce.aheadworks.com/magento-2-extensions/blog) v2.7 and above
 - [magebit/vsbridge-static-content-procesor](https://github.com/magebitcom/static-content-processor) - See Installation section for details
 
 ## Installation
