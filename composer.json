@@ -8,8 +8,7 @@
     "license": "MIT",
     "authors": [
         {
-            "name": "Emils Malovka",
-            "email": "emils.malovka@magebit.com"
+            "name": "Emils Malovka"
         }
     ],
     "autoload": {
