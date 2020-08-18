@@ -73,6 +73,7 @@ class CmsBlogCategory implements MappingInterface
             'name' => ['type' => FieldInterface::TYPE_TEXT],
             'url_key' => ['type' => FieldInterface::TYPE_KEYWORD],
             'status' => ['type' => FieldInterface::TYPE_INTEGER],
+            'post_count' => ['type' => FieldInterface::TYPE_INTEGER],
             'sort_order' => ['type' => FieldInterface::TYPE_LONG],
             'meta_title' => ['type' => FieldInterface::TYPE_TEXT],
             'meta_description' => ['type' => FieldInterface::TYPE_TEXT],

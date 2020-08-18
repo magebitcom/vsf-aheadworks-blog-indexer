@@ -18,6 +18,7 @@
 namespace Magebit\BlogIndexer\Model\ResourceModel;
 
 use Aheadworks\Blog\Api\Data\CategoryInterface;
+use Aheadworks\Blog\Model\ResourceModel\Post;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\EntityManager\MetadataPool;
 
@@ -63,7 +64,17 @@ class CmsBlogCategory
     {
         $metaData = $this->getCmsBlogCategoryMetaData();
 
-        $select = $this->getConnection()->select()->from(['cms_blog_category' => $metaData->getEntityTable()]);
+        $subSelect = $this->getConnection()->select()->from(
+            ['category_posts' => Post::BLOG_POST_CATEGORY_TABLE],
+            'COUNT(*)'
+        );
+
+        $select = $this->getConnection()->select()->from(
+            ['cms_blog_category' => $metaData->getEntityTable()]
+        )->columns([
+            '*',
+            'post_count' => $subSelect->where('category_posts.category_id = cms_blog_category.id')
+        ]);
 
         if (!empty($categoryIds)) {
             $select->where('cms_blog_category.id IN (?)', $categoryIds);

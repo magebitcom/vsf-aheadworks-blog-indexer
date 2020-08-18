@@ -79,6 +79,7 @@ class CmsBlogCategory
                 $categoryData['is_description_enabled'] = (int) $categoryData['is_description_enabled'];
                 $categoryData['sort_order'] = (int) $categoryData['sort_order'];
                 $categoryData['status'] = (int) $categoryData['status'];
+                $categoryData['post_count'] = (int) $categoryData['post_count'];
 
                 unset($categoryData['created_at'], $categoryData['updated_at'], $categoryData['parent_id']);
                 unset($categoryData['path']);

@@ -15,7 +15,7 @@ This repository is a Magento 2 dependency for [Aheadworks Blog module for VSF](h
 - Via composer: `composer require magebit/aheadworks-blog-indexer`
 - Manually
     - Create a `Magebit` directory inside `app/code`
-    - Clone this repository: `git clone git@github.com:magebitcom/vsf-aheadworks-blog-indexer.git`
+    - Clone this repository: `git clone git@github.com:magebitcom/vsf-aheadworks-blog-indexer.git BlogIndexer`
     - This module also requires [magebit/vsbridge-static-content-procesor](https://github.com/magebitcom/static-content-processor)
     which you can install with composer `composer require magebit/vsbridge-static-content-procesor` or going to the repository and following manual installation steps there
 
