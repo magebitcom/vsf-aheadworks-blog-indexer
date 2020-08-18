@@ -19,12 +19,18 @@ namespace Magebit\BlogIndexer\Plugin\Indexer\Save;
 
 use Aheadworks\Blog\Model\Author;
 use Magebit\BlogIndexer\Model\Indexer\BlogProcessor;
+use Magebit\BlogIndexer\Model\Indexer\CategoryProcessor;
 
 /**
  * Class UpdateAuthor
  */
 class UpdateAuthor
 {
+    /**
+     * @var CategoryProcessor
+     */
+    private $categoryProcessor;
+
     /**
      * @var BlogProcessor
      */
@@ -33,10 +39,12 @@ class UpdateAuthor
     /**
      * Save constructor.
      *
+     * @param CategoryProcessor $categoryProcessor
      * @param BlogProcessor $blogProcessor
      */
-    public function __construct(BlogProcessor $blogProcessor)
+    public function __construct(CategoryProcessor $categoryProcessor, BlogProcessor $blogProcessor)
     {
+        $this->categoryProcessor = $categoryProcessor;
         $this->blogProcessor = $blogProcessor;
     }
 
@@ -50,6 +58,7 @@ class UpdateAuthor
     {
         $result->getResource()->addCommitCallback(function () use ($post) {
             $this->blogProcessor->reindexAll();
+            $this->categoryProcessor->reindexAll();
         });
 
         return $result;
@@ -64,6 +73,7 @@ class UpdateAuthor
     public function afterAfterDeleteCommit(Author $post, Author $result)
     {
         $this->blogProcessor->reindexAll();
+        $this->categoryProcessor->reindexAll();
 
         return $result;
     }

@@ -30,6 +30,7 @@ class UpdateCategory
      * @var CategoryProcessor
      */
     private $categoryProcessor;
+    
     /**
      * @var BlogProcessor
      */

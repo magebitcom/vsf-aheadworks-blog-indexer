@@ -65,25 +65,35 @@ class CmsBlogCategory
         $metaData = $this->getCmsBlogCategoryMetaData();
 
         $subSelect = $this->getConnection()->select()->from(
-            ['category_posts' => Post::BLOG_POST_CATEGORY_TABLE],
-            'COUNT(*)'
+            ['blog_category_posts' => Post::BLOG_POST_CATEGORY_TABLE],
+            'COUNT(blog_post.id)'
         );
 
+        $subSelect->joinLeft(
+            ['blog_post' => Post::BLOG_POST_TABLE],
+            'blog_post.id = blog_category_posts.post_id',
+            []
+        );
+
+        $subSelect->where('blog_category_posts.category_id = blog_category.id');
+        $subSelect->where('blog_post.status = ?', 'publication');
+
+
         $select = $this->getConnection()->select()->from(
-            ['cms_blog_category' => $metaData->getEntityTable()]
+            ['blog_category' => $metaData->getEntityTable()]
         )->columns([
             '*',
-            'post_count' => $subSelect->where('category_posts.category_id = cms_blog_category.id')
+            'post_count' => $subSelect
         ]);
 
         if (!empty($categoryIds)) {
-            $select->where('cms_blog_category.id IN (?)', $categoryIds);
+            $select->where('blog_category.id IN (?)', $categoryIds);
         }
 
         $select->where('status = ?', 1);
-        $select->where('cms_blog_category.id > ?', $fromId)
+        $select->where('blog_category.id > ?', $fromId)
             ->limit($limit)
-            ->order('cms_blog_category.id');
+            ->order('blog_category.id');
 
         return $this->getConnection()->fetchAll($select);
     }
