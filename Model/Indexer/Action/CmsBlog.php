@@ -146,6 +146,10 @@ class CmsBlog
                 }
 
                 $blogData['blog_category_ids'] = [];
+                
+                if ($post->getRelatedProductIds()) {
+                    $blogData['related_products'] = array_map('intval', $post->getRelatedProductIds());
+                }
 
                 $categories = $this->cmsBlogCategoryResource->loadPages(1, $post->getCategoryIds());
                 $categoryArray = [];
