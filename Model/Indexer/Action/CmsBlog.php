@@ -191,7 +191,14 @@ class CmsBlog
         } while (!empty($cmsBlogs));
     }
 
-    protected function processCmsData($string, $storeId)
+    /**
+     * Filters cms content
+     *
+     * @param string $string
+     * @param int $storeId
+     * @return mixed
+     */
+    protected function processCmsData(string $string, $storeId)
     {
         $filterData = [[ 'content' => $string]];
         $processed = $this->cmsContentFilter->filter($filterData, (int) $storeId, 'block');
