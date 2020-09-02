@@ -18,6 +18,7 @@
 namespace Magebit\BlogIndexer\Model\Indexer\Action;
 
 use Aheadworks\Blog\Api\PostRepositoryInterface;
+use Divante\VsbridgeIndexerCms\Model\Indexer\DataProvider\CmsContentFilter;
 use Magebit\BlogIndexer\Model\ResourceModel\CmsBlog as CmsBlogResource;
 use Magebit\BlogIndexer\Model\ResourceModel\CmsBlogCategory as CmsBlogCategoryResource;
 use Magebit\BlogIndexer\Model\ResourceModel\CmsBlogTag as CmsBlogTagResource;
@@ -71,6 +72,11 @@ class CmsBlog
     protected $scopeConfig;
 
     /**
+     * @var CmsContentFilter
+     */
+    protected $cmsContentFilter;
+
+    /**
      * CmsBlog constructor.
      *
      * @param AreaList $areaList
@@ -88,7 +94,8 @@ class CmsBlog
         StoreManagerInterface $storeManager,
         Resolver $resolver,
         ScopeConfigInterface $scopeConfig,
-        PostRepositoryInterface $postRepository
+        PostRepositoryInterface $postRepository,
+        CmsContentFilter $cmsContentFilter
     ) {
         $this->areaList = $areaList;
         $this->resourceModel = $cmsBlogResource;
@@ -98,6 +105,7 @@ class CmsBlog
         $this->postRepository = $postRepository;
         $this->cmsBlogCategoryResource = $cmsBlogCategoryResource;
         $this->cmsBlogTag = $cmsBlogTag;
+        $this->cmsContentFilter = $cmsContentFilter;
     }
 
     /**
@@ -129,11 +137,16 @@ class CmsBlog
 
                 $blogData['status'] = $post->getStatus() == 'publication' ? 1 : 0;
 
+                $postContent = $this->processCmsData($post->getContent(), $storeId);
+                $shortContent = $this->processCmsData($blogData['short_content'], $storeId);
+
                 if ($rewritesEnabled) {
-                    $blogData['content'] = $this->resolver->resolve($post->getContent());
-                    $blogData['featured_image_file'] = $this->resolver->resolve($store->getBaseUrl(UrlInterface::URL_TYPE_MEDIA) . $post->getFeaturedImageFile());
+                    $blogData['content'] = $this->resolver->resolve($postContent, (int) $storeId);
+                    $blogData['short_content'] = $this->resolver->resolve($shortContent, (int) $storeId);
+                    $blogData['featured_image_file'] = $this->resolver->resolve($store->getBaseUrl(UrlInterface::URL_TYPE_MEDIA) . $post->getFeaturedImageFile(), (int) $storeId);
                 } else {
-                    $blogData['content'] = $post->getContent();
+                    $blogData['content'] = $postContent;
+                    $blogData['short_content'] = strip_tags($shortContent);
                     $blogData['featured_image_file'] = $store->getBaseUrl(UrlInterface::URL_TYPE_MEDIA) . $post->getFeaturedImageFile();
                 }
 
@@ -145,11 +158,9 @@ class CmsBlog
                     $blogData['author_name'] = null;
                 }
 
+                $blogData['related_products'] = $post->getRelatedProductIds();
+
                 $blogData['blog_category_ids'] = [];
-                
-                if ($post->getRelatedProductIds()) {
-                    $blogData['related_products'] = array_map('intval', $post->getRelatedProductIds());
-                }
 
                 $categories = $this->cmsBlogCategoryResource->loadPages(1, $post->getCategoryIds());
                 $categoryArray = [];
@@ -167,7 +178,6 @@ class CmsBlog
                 }
 
                 $blogData['tags'] = implode(',', $tagsArray);
-                $blogData['short_content'] = strip_tags($blogData['short_content']);
 
                 $blogData['blog_categories'] = (string)json_encode($categoryArray);
                 $blogData['publish_date'] = strtotime($blogData['publish_date']);
@@ -179,5 +189,17 @@ class CmsBlog
                 yield $lastBlogId => $blogData;
             }
         } while (!empty($cmsBlogs));
+    }
+
+    protected function processCmsData($string, $storeId)
+    {
+        $filterData = [[ 'content' => $string]];
+        $processed = $this->cmsContentFilter->filter($filterData, (int) $storeId, 'block');
+
+        if (isset($processed[0]['content'])) {
+            return $processed[0]['content'];
+        }
+        
+        return null;
     }
 }
