@@ -17,6 +17,7 @@
 
 namespace Magebit\BlogIndexer\Model\Indexer\Action;
 
+use Aheadworks\Blog\Model\ResourceModel\Indexer\ProductPost\DataCollector;
 use Aheadworks\Blog\Api\PostRepositoryInterface;
 use Divante\VsbridgeIndexerCms\Model\Indexer\DataProvider\CmsContentFilter;
 use Magebit\BlogIndexer\Model\ResourceModel\CmsBlog as CmsBlogResource;
@@ -44,18 +45,22 @@ class CmsBlog
      * @var AreaList
      */
     protected $areaList;
+
     /**
      * @var StoreManagerInterface
      */
     protected $storeManager;
+    
     /**
      * @var Resolver
      */
     protected $resolver;
+
     /**
      * @var PostRepositoryInterface
      */
     protected $postRepository;
+    
     /**
      * @var CmsBlogCategoryResource
      */
@@ -77,14 +82,22 @@ class CmsBlog
     protected $cmsContentFilter;
 
     /**
-     * CmsBlog constructor.
-     *
+     * @var DataCollector
+     */
+    protected $dataCollector;
+
+    /**
      * @param AreaList $areaList
      * @param CmsBlogResource $cmsBlogResource
      * @param CmsBlogCategoryResource $cmsBlogCategoryResource
+     * @param CmsBlogTagResource $cmsBlogTag
      * @param StoreManagerInterface $storeManager
      * @param Resolver $resolver
+     * @param ScopeConfigInterface $scopeConfig
      * @param PostRepositoryInterface $postRepository
+     * @param CmsContentFilter $cmsContentFilter
+     * @param DataCollector $dataCollector
+     * @return void
      */
     public function __construct(
         AreaList $areaList,
@@ -95,7 +108,8 @@ class CmsBlog
         Resolver $resolver,
         ScopeConfigInterface $scopeConfig,
         PostRepositoryInterface $postRepository,
-        CmsContentFilter $cmsContentFilter
+        CmsContentFilter $cmsContentFilter,
+        DataCollector $dataCollector
     ) {
         $this->areaList = $areaList;
         $this->resourceModel = $cmsBlogResource;
@@ -106,6 +120,7 @@ class CmsBlog
         $this->cmsBlogCategoryResource = $cmsBlogCategoryResource;
         $this->cmsBlogTag = $cmsBlogTag;
         $this->cmsContentFilter = $cmsContentFilter;
+        $this->dataCollector = $dataCollector;
     }
 
     /**
@@ -128,6 +143,7 @@ class CmsBlog
 
         do {
             $cmsBlogs = $this->resourceModel->loadBlogs($storeId, $blogIds, $lastBlogId);
+            $productPostData = $this->dataCollector->prepareProductPostData($blogIds);
 
             foreach ($cmsBlogs as $blogData) {
                 $blogData['id'] = (int) $blogData['id'];
@@ -137,8 +153,8 @@ class CmsBlog
 
                 $blogData['status'] = $post->getStatus() == 'publication' ? 1 : 0;
 
-                $postContent = $this->processCmsData($post->getContent(), $storeId);
-                $shortContent = $this->processCmsData($blogData['short_content'], $storeId);
+                $postContent = $this->processCmsData($post->getContent(), (int) $storeId);
+                $shortContent = $this->processCmsData($blogData['short_content'], (int) $storeId);
 
                 if ($rewritesEnabled) {
                     $blogData['content'] = $this->resolver->resolve($postContent, (int) $storeId);
@@ -158,7 +174,7 @@ class CmsBlog
                     $blogData['author_name'] = null;
                 }
 
-                $blogData['related_products'] = $post->getRelatedProductIds();
+                $blogData['related_products'] = $this->getRelatedProducts($productPostData, $blogData['id'], (int) $storeId);
 
                 $blogData['blog_category_ids'] = [];
 
@@ -192,16 +208,37 @@ class CmsBlog
     }
 
     /**
-     * Filters cms content
+     * Returns related products for selected post and store id
+     *
+     * @param mixed $productPostData
+     * @param int $postId
+     * @param int $storeId
+     * @return array
+     */
+    private function getRelatedProducts($productPostData, int $postId, int $storeId): array
+    {
+        $productIds  = [];
+
+        foreach ($productPostData as $productPost) {
+            if ($productPost['post_id'] == $postId && $productPost['store_id'] == $storeId) {
+                $productIds[] = intval($productPost['product_id'], 10);
+            }
+        }
+
+        return $productIds;
+    }
+
+    /**
+     * Filters m2 cms content
      *
      * @param string $string
      * @param int $storeId
-     * @return mixed
+     * @return string|null
      */
-    protected function processCmsData(string $string, $storeId)
+    protected function processCmsData(string $string, int $storeId)
     {
         $filterData = [[ 'content' => $string]];
-        $processed = $this->cmsContentFilter->filter($filterData, (int) $storeId, 'block');
+        $processed = $this->cmsContentFilter->filter($filterData, $storeId, 'block');
 
         if (isset($processed[0]['content'])) {
             return $processed[0]['content'];
