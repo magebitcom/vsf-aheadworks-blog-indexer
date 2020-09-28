@@ -9,6 +9,9 @@
     "authors": [
         {
             "name": "Emils Malovka"
+        },
+        {
+            "name": "Kristofers Ozolins"
         }
     ],
     "autoload": {
