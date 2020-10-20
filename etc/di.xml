@@ -13,8 +13,7 @@
     <virtualType name="Magebit\BlogIndexer\Indexer\CmsBlogIndexerHandlerVirtual"
                  type="Divante\VsbridgeIndexerCore\Indexer\GenericIndexerHandler">
         <arguments>
-            <argument name="indexIdentifier" xsi:type="string">vue_storefront_catalog</argument>
-            <argument name="typeName" xsi:type="string">cms_blog</argument>
+            <argument name="indexIdentifier" xsi:type="string">cms_blog</argument>
         </arguments>
     </virtualType>
     <type name="Magebit\BlogIndexer\Model\Indexer\CmsBlog">
@@ -26,8 +25,7 @@
     <virtualType name="Magebit\BlogIndexer\Indexer\CmsBlogCategoryIndexerHandlerVirtual"
                  type="Divante\VsbridgeIndexerCore\Indexer\GenericIndexerHandler">
         <arguments>
-            <argument name="indexIdentifier" xsi:type="string">vue_storefront_catalog</argument>
-            <argument name="typeName" xsi:type="string">cms_blog_category</argument>
+            <argument name="indexIdentifier" xsi:type="string">cms_blog_category</argument>
         </arguments>
     </virtualType>
     <type name="Magebit\BlogIndexer\Model\Indexer\CmsBlogCategory">
