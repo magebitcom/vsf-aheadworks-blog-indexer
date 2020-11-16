@@ -78,7 +78,7 @@ class CmsBlog implements MappingInterface
             'short_content' => ['type' => FieldInterface::TYPE_TEXT],
             'content' => ['type' => FieldInterface::TYPE_TEXT],
             'author_name' => ['type' => FieldInterface::TYPE_TEXT],
-            'publish_date' => ['type' => FieldInterface::TYPE_INTEGER],
+            'publish_date' => ['type' => FieldInterface::TYPE_DATE],
             'related_products' => ['type' => FieldInterface::TYPE_TEXT],
             'meta_title' => ['type' => FieldInterface::TYPE_TEXT],
             'meta_description' => ['type' => FieldInterface::TYPE_TEXT],
