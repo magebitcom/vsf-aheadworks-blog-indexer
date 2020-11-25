@@ -153,16 +153,12 @@ class CmsBlog
 
                 $blogData['status'] = $post->getStatus() == 'publication' ? 1 : 0;
 
-                $postContent = $this->processCmsData($post->getContent(), (int) $storeId);
-                $shortContent = $this->processCmsData($blogData['short_content'], (int) $storeId);
+                $blogData['content'] = $this->processCmsData($post->getContent(), (int) $storeId);
+                $blogData['short_content'] = $this->processCmsData($blogData['short_content'], (int) $storeId);
 
                 if ($rewritesEnabled) {
-                    $blogData['content'] = $this->resolver->resolve($postContent, (int) $storeId);
-                    $blogData['short_content'] = $this->resolver->resolve($shortContent, (int) $storeId);
                     $blogData['featured_image_file'] = $this->resolver->resolve($store->getBaseUrl(UrlInterface::URL_TYPE_MEDIA) . $post->getFeaturedImageFile(), (int) $storeId);
                 } else {
-                    $blogData['content'] = $postContent;
-                    $blogData['short_content'] = strip_tags($shortContent);
                     $blogData['featured_image_file'] = $store->getBaseUrl(UrlInterface::URL_TYPE_MEDIA) . $post->getFeaturedImageFile();
                 }
 
