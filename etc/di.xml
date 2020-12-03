@@ -1,46 +1,50 @@
 <?xml version="1.0"?>
 <!--
 /**
- * Magebit_BlogIndexer
+ * This file is part of the Magebit_BlogIndexer package.
  *
- * @category  Magebit
- * @package   Magebit_BlogIndexer
- * @author    Emils Malovka <emils.malovka@magebit.com>
- * @copyright 2020 [Magebit, Ltd.(http://www.magebit.com/)]
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magebit_BlogIndexer
+ * to newer versions in the future.
+ *
+ * @copyright Copyright (c) 2020 Magebit, Ltd. (https://magebit.com/)
+ * @license   GNU General Public License ("GPL") v3.0
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-    <virtualType name="Magebit\BlogIndexer\Indexer\CmsBlogIndexerHandlerVirtual"
-                 type="Divante\VsbridgeIndexerCore\Indexer\GenericIndexerHandler">
+    <virtualType name="Magebit\BlogIndexer\Model\Indexer\CmsBlog" type="Divante\VsbridgeIndexerCore\Indexer\Base">
         <arguments>
-            <argument name="indexIdentifier" xsi:type="string">vue_storefront_catalog</argument>
             <argument name="typeName" xsi:type="string">cms_blog</argument>
         </arguments>
     </virtualType>
-    <type name="Magebit\BlogIndexer\Model\Indexer\CmsBlog">
-        <arguments>
-            <argument name="indexerHandler" xsi:type="object">Magebit\BlogIndexer\Indexer\CmsBlogIndexerHandlerVirtual</argument>
-        </arguments>
-    </type>
 
-    <virtualType name="Magebit\BlogIndexer\Indexer\CmsBlogCategoryIndexerHandlerVirtual"
-                 type="Divante\VsbridgeIndexerCore\Indexer\GenericIndexerHandler">
+    <virtualType name="Magebit\BlogIndexer\Model\Indexer\CmsBlogCategory" type="Divante\VsbridgeIndexerCore\Indexer\Base">
         <arguments>
-            <argument name="indexIdentifier" xsi:type="string">vue_storefront_catalog</argument>
             <argument name="typeName" xsi:type="string">cms_blog_category</argument>
         </arguments>
     </virtualType>
-    <type name="Magebit\BlogIndexer\Model\Indexer\CmsBlogCategory">
+
+    <type name="Divante\VsbridgeIndexerCore\Indexer\RebuildActionPool">
         <arguments>
-            <argument name="indexerHandler" xsi:type="object">Magebit\BlogIndexer\Indexer\CmsBlogCategoryIndexerHandlerVirtual</argument>
+            <argument name="actions" xsi:type="array">
+                <item name="cms_blog" xsi:type="string">Magebit\BlogIndexer\Model\Indexer\Action\CmsBlog</item>
+                <item name="cms_blog_category" xsi:type="string">Magebit\BlogIndexer\Model\Indexer\Action\CmsBlogCategory</item>
+            </argument>
         </arguments>
     </type>
+
     <type name="Aheadworks\Blog\Model\Category">
         <plugin name="update_blog_category_data_in_elastic" type="Magebit\BlogIndexer\Plugin\Indexer\Save\UpdateCategory"/>
     </type>
+
     <type name="Aheadworks\Blog\Model\Post">
         <plugin name="update_blog_post_data_in_elastic" type="Magebit\BlogIndexer\Plugin\Indexer\Save\UpdatePost"/>
     </type>
+
     <type name="Aheadworks\Blog\Model\Author">
         <plugin name="update_blog_author_data_in_elastic" type="Magebit\BlogIndexer\Plugin\Indexer\Save\UpdateAuthor"/>
     </type>

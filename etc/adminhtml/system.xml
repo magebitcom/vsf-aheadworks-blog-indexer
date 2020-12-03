@@ -1,5 +1,20 @@
 <?xml version="1.0"?>
-
+<!--
+/**
+ * This file is part of the Magebit_BlogIndexer package.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magebit_BlogIndexer
+ * to newer versions in the future.
+ *
+ * @copyright Copyright (c) 2020 Magebit, Ltd. (https://magebit.com/)
+ * @license   GNU General Public License ("GPL") v3.0
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+-->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
     <system>
         <section id="vsbridge_indexer_settings">

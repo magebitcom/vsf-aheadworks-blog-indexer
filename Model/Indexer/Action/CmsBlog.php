@@ -30,11 +30,12 @@ use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\UrlInterface;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Store\Model\StoreManagerInterface;
+use Divante\VsbridgeIndexerCore\Indexer\RebuildActionInterface;
 
 /**
  * Class CmsBlog
  */
-class CmsBlog
+class CmsBlog implements RebuildActionInterface
 {
     /**
      * @var CmsBlogResource
@@ -50,7 +51,7 @@ class CmsBlog
      * @var StoreManagerInterface
      */
     protected $storeManager;
-    
+
     /**
      * @var Resolver
      */
@@ -60,7 +61,7 @@ class CmsBlog
      * @var PostRepositoryInterface
      */
     protected $postRepository;
-    
+
     /**
      * @var CmsBlogCategoryResource
      */
@@ -128,7 +129,7 @@ class CmsBlog
      * @param array $blogIds
      * @return \Traversable
      */
-    public function rebuild($storeId = 1, array $blogIds = [])
+    public function rebuild($storeId, array $blogIds): \Traversable
     {
         $this->areaList->getArea(Area::AREA_FRONTEND)->load(Area::PART_DESIGN);
         $rewritesEnabled = $this->scopeConfig->getValue(
@@ -153,16 +154,12 @@ class CmsBlog
 
                 $blogData['status'] = $post->getStatus() == 'publication' ? 1 : 0;
 
-                $postContent = $this->processCmsData($post->getContent(), (int) $storeId);
-                $shortContent = $this->processCmsData($blogData['short_content'], (int) $storeId);
+                $blogData['content'] = $this->processCmsData($post->getContent(), (int) $storeId);
+                $blogData['short_content'] = $this->processCmsData($blogData['short_content'], (int) $storeId);
 
                 if ($rewritesEnabled) {
-                    $blogData['content'] = $this->resolver->resolve($postContent, (int) $storeId);
-                    $blogData['short_content'] = $this->resolver->resolve($shortContent, (int) $storeId);
                     $blogData['featured_image_file'] = $this->resolver->resolve($store->getBaseUrl(UrlInterface::URL_TYPE_MEDIA) . $post->getFeaturedImageFile(), (int) $storeId);
                 } else {
-                    $blogData['content'] = $postContent;
-                    $blogData['short_content'] = strip_tags($shortContent);
                     $blogData['featured_image_file'] = $store->getBaseUrl(UrlInterface::URL_TYPE_MEDIA) . $post->getFeaturedImageFile();
                 }
 
@@ -243,7 +240,7 @@ class CmsBlog
         if (isset($processed[0]['content'])) {
             return $processed[0]['content'];
         }
-        
+
         return null;
     }
 }
