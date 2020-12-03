@@ -4,6 +4,7 @@
     "type": "magento2-component",
     "require": {
         "magebit/vsbridge-static-content-procesor": "^1.0",
+        "divante/magento2-vsbridge-indexer": ">=2.0.0",
         "magento/product-community-edition": ">=2.4.0 <2.5.0"
     },
     "license": "MIT",

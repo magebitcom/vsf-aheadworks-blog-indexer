@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
 /**
  * This file is part of the Magebit_BlogIndexer package.
@@ -15,12 +15,8 @@
  * file that was distributed with this source code.
  */
 -->
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
-    <module name="Magebit_BlogIndexer" setup_version="1.0.0">
-        <sequence>
-            <Aheadworks_Blog/>
-            <Divante_VsbridgeIndexerCore/>
-            <Magebit_StaticContentProcessor/>
-        </sequence>
-    </module>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Divante_VsbridgeIndexerCore:etc/vsbridge.xsd">
+    <type identifier="cms_blog" mapping="Magebit\BlogIndexer\Index\Mapping\CmsBlog"/>
+    <type identifier="cms_blog_category" mapping="Magebit\BlogIndexer\Index\Mapping\CmsBlogCategory"/>
 </config>

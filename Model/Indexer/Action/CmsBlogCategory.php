@@ -18,24 +18,20 @@
 namespace Magebit\BlogIndexer\Model\Indexer\Action;
 
 use Magebit\BlogIndexer\Model\ResourceModel\CmsBlogCategory as CmsBlogCategoryResource;
-use Magento\Cms\Model\Template\FilterProvider;
 use Magento\Framework\App\Area;
 use Magento\Framework\App\AreaList;
+use Divante\VsbridgeIndexerCore\Indexer\RebuildActionInterface;
 
 /**
  * Class CmsBlogCategory
  */
-class CmsBlogCategory
+class CmsBlogCategory implements RebuildActionInterface
 {
     /**
      * @var CmsBlogCategoryResource
      */
     private $resourceModel;
 
-    /**
-     * @var \Magento\Cms\Model\Template\FilterProvider
-     */
-    private $filterProvider;
     /**
      * @var AreaList
      */
@@ -46,15 +42,12 @@ class CmsBlogCategory
      *
      * @param AreaList $areaList
      * @param CmsBlogCategoryResource $cmsBlogCategoryResource
-     * @param FilterProvider $filterProvider
      */
     public function __construct(
         AreaList $areaList,
-        CmsBlogCategoryResource $cmsBlogCategoryResource,
-        FilterProvider $filterProvider
+        CmsBlogCategoryResource $cmsBlogCategoryResource
     ) {
         $this->areaList = $areaList;
-        $this->filterProvider = $filterProvider;
         $this->resourceModel = $cmsBlogCategoryResource;
     }
 
@@ -64,7 +57,7 @@ class CmsBlogCategory
      *
      * @return \Traversable
      */
-    public function rebuild($storeId = 1, array $categoryIds = [])
+    public function rebuild($storeId, array $categoryIds): \Traversable
     {
         $this->areaList->getArea(Area::AREA_FRONTEND)->load(Area::PART_DESIGN);
         $lastPageId = 0;

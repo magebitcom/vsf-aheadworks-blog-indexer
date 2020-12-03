@@ -30,11 +30,12 @@ use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\UrlInterface;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Store\Model\StoreManagerInterface;
+use Divante\VsbridgeIndexerCore\Indexer\RebuildActionInterface;
 
 /**
  * Class CmsBlog
  */
-class CmsBlog
+class CmsBlog implements RebuildActionInterface
 {
     /**
      * @var CmsBlogResource
@@ -50,7 +51,7 @@ class CmsBlog
      * @var StoreManagerInterface
      */
     protected $storeManager;
-    
+
     /**
      * @var Resolver
      */
@@ -60,7 +61,7 @@ class CmsBlog
      * @var PostRepositoryInterface
      */
     protected $postRepository;
-    
+
     /**
      * @var CmsBlogCategoryResource
      */
@@ -128,7 +129,7 @@ class CmsBlog
      * @param array $blogIds
      * @return \Traversable
      */
-    public function rebuild($storeId = 1, array $blogIds = [])
+    public function rebuild($storeId, array $blogIds): \Traversable
     {
         $this->areaList->getArea(Area::AREA_FRONTEND)->load(Area::PART_DESIGN);
         $rewritesEnabled = $this->scopeConfig->getValue(
@@ -239,7 +240,7 @@ class CmsBlog
         if (isset($processed[0]['content'])) {
             return $processed[0]['content'];
         }
-        
+
         return null;
     }
 }
