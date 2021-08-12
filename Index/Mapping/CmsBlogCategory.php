@@ -20,6 +20,7 @@ namespace Magebit\BlogIndexer\Index\Mapping;
 use Divante\VsbridgeIndexerCore\Api\Mapping\FieldInterface;
 use Divante\VsbridgeIndexerCore\Api\MappingInterface;
 use Magento\Framework\Event\ManagerInterface as EventManager;
+use Divante\VsbridgeIndexerCatalog\Index\Mapping\FieldMappingInterface;
 
 /**
  * Class CmsBlogCategory
@@ -38,12 +39,19 @@ class CmsBlogCategory implements MappingInterface
     private $type;
 
     /**
+     * @var FieldMappingInterface[]
+     */
+    private $additionalMapping = [];
+
+    /**
      * CmsBlog constructor.
      *
      * @param EventManager $eventManager
      */
-    public function __construct(EventManager $eventManager)
-    {
+    public function __construct(
+        EventManager $eventManager,
+        array $additionalMapping = []
+    ) {
         $this->eventManager = $eventManager;
     }
 
@@ -79,6 +87,8 @@ class CmsBlogCategory implements MappingInterface
             'meta_description' => ['type' => FieldInterface::TYPE_TEXT],
         ];
 
+        $properties = array_merge($properties, $this->getCustomProperties());
+
         $mappingObject = new \Magento\Framework\DataObject();
         $mappingObject->setData('properties', $properties);
 
@@ -88,5 +98,21 @@ class CmsBlogCategory implements MappingInterface
         );
 
         return $mappingObject->getData();
+    }
+
+    /**
+    * @return array
+    */
+    protected function getCustomProperties(): array
+    {
+        $customProperties = [];
+
+        foreach ($this->additionalMapping as $propertyName => $properties) {
+            if ($properties instanceof FieldMappingInterface) {
+                $customProperties[$propertyName] = $properties->get();
+            }
+        }
+
+        return $customProperties;
     }
 }
