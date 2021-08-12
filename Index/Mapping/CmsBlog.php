@@ -20,6 +20,7 @@ namespace Magebit\BlogIndexer\Index\Mapping;
 use Divante\VsbridgeIndexerCore\Api\Mapping\FieldInterface;
 use Divante\VsbridgeIndexerCore\Api\MappingInterface;
 use Magento\Framework\Event\ManagerInterface as EventManager;
+use Divante\VsbridgeIndexerCatalog\Index\Mapping\FieldMappingInterface;
 
 /**
  * Class CmsBlog
@@ -38,13 +39,22 @@ class CmsBlog implements MappingInterface
     private $type;
 
     /**
+     * @var FieldMappingInterface[]
+     */
+    private $additionalMapping = [];
+
+    /**
      * CmsBlog constructor.
      *
      * @param EventManager $eventManager
+     * @param array $additionalMapping
      */
-    public function __construct(EventManager $eventManager)
-    {
+    public function __construct(
+        EventManager $eventManager,
+        array $additionalMapping = []
+    ) {
         $this->eventManager = $eventManager;
+        $this->additionalMapping = $additionalMapping;
     }
 
     /**
@@ -84,9 +94,10 @@ class CmsBlog implements MappingInterface
             'meta_description' => ['type' => FieldInterface::TYPE_TEXT],
             'blog_category_ids' => ['type' => FieldInterface::TYPE_TEXT],
             'blog_categories' => ['type' => FieldInterface::TYPE_TEXT],
-            'status' => ['type' => FieldInterface::TYPE_INTEGER],
-
+            'status' => ['type' => FieldInterface::TYPE_INTEGER]
         ];
+
+        $properties = array_merge($properties, $this->getCustomProperties());
 
         $mappingObject = new \Magento\Framework\DataObject();
         $mappingObject->setData('properties', $properties);
@@ -97,5 +108,21 @@ class CmsBlog implements MappingInterface
         );
 
         return $mappingObject->getData();
+    }
+
+    /**
+     * @return array
+     */
+    protected function getCustomProperties(): array
+    {
+        $customProperties = [];
+
+        foreach ($this->additionalMapping as $propertyName => $properties) {
+            if ($properties instanceof FieldMappingInterface) {
+                $customProperties[$propertyName] = $properties->get();
+            }
+        }
+
+        return $customProperties;
     }
 }
